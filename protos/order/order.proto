@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+package order;
+
+option go_package = 'bitbucket.org/erafone/go-b2b-order-service';
+
+service OrderService {
+  rpc GetOrderByCustomer(GetOrderByCustomerRequest) returns (GetOrderByCustomerResponse) {
+    option (google.api.http) = {
+      get: "/v1/order"
+      additional_bindings: {
+        get: "/v1/order?keyword={keyword}&email&source={source}&offset={offset}&limit={limit}&order={order}&sort={sort}&keyword={keyword}"
+      }
+    };
+  }
+}
+
+message GetOrderByCustomerRequest {
+  string email = 1;
+  string source = 2;
+  int64 offset = 3;
+  int64 limit = 4;
+  string order = 5;
+  string sort = 6;
+  string keyword = 7;
+}
+
+message OrderBaseResponse {
+  int64 id = 1;
+  string order_number = 2;
+  string customer_firstname = 3;
+  string customer_lastname = 4;
+  double grand_total = 5;
+  string grand_total_formated = 6;
+  string status = 7;
+  string created_at = 8;
+}
+
+message OrderListResponse {
+  repeated OrderBaseResponse items = 1;
+  int64 total_count = 2;
+}
+
+message GetOrderByCustomerResponse {
+  int64 status = 1;
+  OrderListResponse data = 2;
+  string error_message = 3;
+}
+
